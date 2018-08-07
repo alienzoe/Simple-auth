@@ -1,19 +1,8 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
+import { userList } from "../constants";
 
-export default class LoginForm extends React.Component {
-  resetDefault = {
-    firstName: "",
-    lastName: "",
-    userName: "",
-    email: "",
-    password: "",
-    firstNameError: "",
-    lastNameError: "",
-    userNameError: "",
-    emailError: "",
-    passwordError: ""
-  };
-
+class LoginForm extends React.Component {
   state = {
     firstName: "",
     lastName: "",
@@ -23,22 +12,48 @@ export default class LoginForm extends React.Component {
     lastNameError: "",
     userNameError: "",
     emailError: "",
-    passwordError: "",
-    isLogin: this.props.isLogin !== undefined ? this.props.isLogin : null
+    passwordError: ""
   };
 
-  handleOnChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
+  mutation = () => {
+    console.log(this.state);
+    const user = userList.filter(
+      list =>
+        list.email === this.state.email && list.password === this.state.password
+    );
+    console.log(user);
+    if (user.length > 0) {
+      return {
+        isLogin: true,
+        data: user[0]
+      };
+    }
+
+    return {
+      isLogin: false,
+      data: {}
+    };
   };
 
-  handleOnSubmit = e => {
+  async handleOnSubmit(e) {
     e.preventDefault();
 
     if (!this.handleValidate()) {
       this.setState(state => ({ ...state, ...this.resetDefault }));
     }
+
+    const { isLogin, data } = await this.mutation();
+
+    if (isLogin) {
+      localStorage.setItem("data", JSON.stringify({ isLogin, data }));
+      this.props.history.push("/");
+    }
+  }
+
+  handleOnChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
   };
 
   handleValidate = () => {
@@ -50,14 +65,18 @@ export default class LoginForm extends React.Component {
       passwordError: ""
     };
 
-    if (this.state.userName.length < 5) {
+    if (this.state.firstName.length <= 0) {
       isError = true;
-      errors.userNameError = "Username needs to be atleast 5 characters long";
+      errors.firstNameError = "First Name is required!";
+    }
+    if (this.state.lastName.length <= 0) {
+      isError = true;
+      errors.lastNameError = "First Name is required!";
     }
 
     if (this.state.email.indexOf("@") === -1) {
       isError = true;
-      errors.emailError = "Requires valid email";
+      errors.emailError = "Invalid email";
     }
 
     this.setState(errors);
@@ -85,3 +104,5 @@ export default class LoginForm extends React.Component {
     );
   }
 }
+
+export default withRouter(LoginForm);

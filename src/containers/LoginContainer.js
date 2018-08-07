@@ -11,23 +11,15 @@ const LoginContainer = () => (
       margin: "0 auto"
     }}
   >
-    <LoginForm isLogin="true">
+    <LoginForm>
       {(
-        {
-          firstName,
-          lastName,
-          email,
-          password,
-          firstNameError,
-          lastNameError,
-          emailError,
-          passwordError
-        },
+        { email, password, emailError, passwordError },
         handleOnChange,
         handleOnSubmit
       ) => (
         <React.Fragment>
           <h3 style={{ margin: "0" }}>Login</h3>
+          <span>{}</span>
           <form
             style={{
               display: "flex",
@@ -35,28 +27,7 @@ const LoginContainer = () => (
               alignItems: "center"
             }}
             onSubmit={handleOnSubmit}
-            autoComplete="off"
           >
-            <TextField
-              autoComplete="off"
-              name="firstName"
-              hintText="First Name"
-              floatingLabelText="First Name"
-              value={firstName}
-              onChange={handleOnChange}
-              errorText={firstNameError}
-              floatingLabelFixed
-            />
-            <TextField
-              autoComplete="off"
-              name="lastName"
-              hintText="Last Name"
-              floatingLabelText="Last Name"
-              value={lastName}
-              onChange={handleOnChange}
-              errorText={lastNameError}
-              floatingLabelFixed
-            />
             <TextField
               autoComplete="off"
               name="email"
@@ -79,7 +50,7 @@ const LoginContainer = () => (
               floatingLabelFixed
             />
             <br />
-            <RaisedButton primary label="Login" />
+            <RaisedButton type="submit" primary label="Login" />
           </form>
         </React.Fragment>
       )}
