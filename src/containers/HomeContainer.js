@@ -4,11 +4,16 @@ import RaisedButton from "material-ui/RaisedButton";
 
 const HomeComponent = props => (
   <div className={props.classes.container}>
-    <h1>Hello! {}</h1>
+    <h1>Hello!</h1>
     <br />
-    <div>{}</div>
-    <br />
-    <RaisedButton primary label="Log-out" />
+    <RaisedButton
+      primary
+      label="Log-out"
+      onClick={() => {
+        localStorage.removeItem("data");
+        props.history.push("/login");
+      }}
+    />
   </div>
 );
 

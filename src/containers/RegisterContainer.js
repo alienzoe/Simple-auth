@@ -11,7 +11,7 @@ const LoginContainer = () => (
       margin: "0 auto"
     }}
   >
-    <LoginForm isLogin="true">
+    <LoginForm authenType="register">
       {(
         {
           firstName,

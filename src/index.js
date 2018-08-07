@@ -14,19 +14,6 @@ import Login from "./containers/LoginContainer";
 import Register from "./containers/RegisterContainer";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
-const notFound = () => <h1>404 Page not Found</h1>;
-
-const routes = [
-  {
-    path: "/login",
-    component: Login
-  },
-  {
-    path: "/register",
-    component: Register
-  }
-];
-
 const authen = () => {
   const exist = localStorage.getItem("data") && true;
 
@@ -36,12 +23,12 @@ const authen = () => {
   }
 };
 
-const AuthRoute = ({ component: Component, ...rest }) => (
+const AuthRoute = ({ component: WrappedHome, ...rest }) => (
   <Route
     {...rest}
     render={props =>
       authen() ? (
-        <Component {...props} {...JSON.parse(localStorage.getItem("data"))} />
+        <WrappedHome {...props} {...JSON.parse(localStorage.getItem("data"))} />
       ) : (
         <Redirect to="/login" />
       )
@@ -49,9 +36,16 @@ const AuthRoute = ({ component: Component, ...rest }) => (
   />
 );
 
+const LoginRoute = ({ component: WrappedLogin, ...rest }) => (
+  <Route
+    {...rest}
+    render={() => (authen() ? <Redirect to="/" /> : <WrappedLogin />)}
+  />
+);
+
 class App extends React.Component {
   render() {
-    localStorage.setItem("data", JSON.stringify({ isLogin: false, user: {} }));
+    // localStorage.setItem("data", JSON.stringify({ isLogin: false, user: {} }));
     return (
       <div
         style={{
@@ -60,9 +54,8 @@ class App extends React.Component {
         }}
       >
         <Switch>
-          {routes.map((route, i) => (
-            <Route exact {...route} key={i} />
-          ))}
+          <Route exact path="/register" component={Register} />
+          <LoginRoute exact path="/login" component={Login} />
           <AuthRoute exact path="/" component={Home} />
         </Switch>
       </div>

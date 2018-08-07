@@ -12,16 +12,17 @@ class LoginForm extends React.Component {
     lastNameError: "",
     userNameError: "",
     emailError: "",
-    passwordError: ""
+    passwordError: "",
+    message: "",
+    authenType: this.props.authenType
   };
 
   mutation = () => {
-    console.log(this.state);
     const user = userList.filter(
       list =>
         list.email === this.state.email && list.password === this.state.password
     );
-    console.log(user);
+
     if (user.length > 0) {
       return {
         isLogin: true,
@@ -39,14 +40,16 @@ class LoginForm extends React.Component {
     e.preventDefault();
 
     if (!this.handleValidate()) {
-      this.setState(state => ({ ...state, ...this.resetDefault }));
-    }
+      const { isLogin, data } = await this.mutation();
 
-    const { isLogin, data } = await this.mutation();
-
-    if (isLogin) {
-      localStorage.setItem("data", JSON.stringify({ isLogin, data }));
-      this.props.history.push("/");
+      if (isLogin) {
+        localStorage.setItem("data", JSON.stringify({ isLogin, data }));
+        this.props.history.push("/");
+      } else {
+        this.setState({
+          message: "Incorrect email and password! Please try again!"
+        });
+      }
     }
   }
 
@@ -65,13 +68,15 @@ class LoginForm extends React.Component {
       passwordError: ""
     };
 
-    if (this.state.firstName.length <= 0) {
-      isError = true;
-      errors.firstNameError = "First Name is required!";
-    }
-    if (this.state.lastName.length <= 0) {
-      isError = true;
-      errors.lastNameError = "First Name is required!";
+    if (this.state.authenType === "register") {
+      if (this.state.firstName.length <= 0) {
+        isError = true;
+        errors.firstNameError = "First Name is required!";
+      }
+      if (this.state.lastName.length <= 0) {
+        isError = true;
+        errors.lastNameError = "First Name is required!";
+      }
     }
 
     if (this.state.email.indexOf("@") === -1) {

@@ -11,15 +11,15 @@ const LoginContainer = () => (
       margin: "0 auto"
     }}
   >
-    <LoginForm>
+    <LoginForm authenType="login">
       {(
-        { email, password, emailError, passwordError },
+        { email, password, emailError, passwordError, message },
         handleOnChange,
         handleOnSubmit
       ) => (
         <React.Fragment>
           <h3 style={{ margin: "0" }}>Login</h3>
-          <span>{}</span>
+          <span>{message}</span>
           <form
             style={{
               display: "flex",
